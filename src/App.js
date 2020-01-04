@@ -5,17 +5,18 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
-
+import { useField } from './hooks'
 
 const App = () => {
-  const [username, setUsername] = useState('')
+  const u = useField('text')
+  const username = u.value
   const [password, setPassword] = useState ('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
   useEffect(() => {
     blogService
@@ -45,7 +46,7 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
+      u.reset()
       setPassword('')
     } catch (error) {
       setMessage('Wrong Credentials')
@@ -66,12 +67,7 @@ const App = () => {
     <h1> Log into blog app </h1>
       <div>
         Username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target}) => setUsername(target.value)}
-        />
+          <input {...u} reset="blah"/>
       </div>
       <div>
         password
@@ -137,9 +133,9 @@ const App = () => {
   const addBlog = (event) => {
     event.preventDefault()
     const blogObject = {
-      title: title,
-      author: author,
-      url: url,
+      title: title.value,
+      author: author.value,
+      url: url.value,
     }
 
     blogService
@@ -148,9 +144,9 @@ const App = () => {
         setBlogs(blogs.concat(blog))
       })
       setMessage(`A new blog "${blogObject.title}" added`)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      title.reset()
+      author.reset()
+      url.reset()
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -172,13 +168,13 @@ const App = () => {
           <div>
             <Togglable buttonLabel="new blog">
               <BlogForm
-                title={title}
-                author={author}
-                url={url}
+                title={title.value}
+                author={author.value}
+                url={url.value}
                 addBlog={addBlog}
-                handleTitleChange={({ target }) => setTitle(target.value)}
-                handleAuthorChange={({ target }) => setAuthor(target.value)}
-                handleUrlChange={({ target }) => setUrl(target.value)}
+                handleTitleChange={title.onChange}
+                handleAuthorChange={author.onChange}
+                handleUrlChange={url.onChange}
               />
             </Togglable>
             </div>

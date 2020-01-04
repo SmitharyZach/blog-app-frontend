@@ -18,7 +18,7 @@ const Blog = ({ blog, likeBlog, removeBlog }) => {
 
   return (
     <div style={blogStyle}>
-      <div onClick={() => setShowTitleOnly(!showTitleOnly)}>"{blog.title}" by {blog.author}</div>
+      <div className = "showMore" onClick={() => setShowTitleOnly(!showTitleOnly)}>"{blog.title}" by {blog.author}</div>
         <div>{showTitleOnly === true ?
           <div style={titleStyle}></div> :
           <>
